@@ -1,5 +1,6 @@
 from shutil import copy
-from datetime import date, timedelta
+import datetime #import date, timedelta
+import time
 from ctypes import *
 from os import listdir
 from os.path import isfile, join
@@ -25,7 +26,7 @@ def fnc(days_ago):
     '''File Name Constructor.
     Коструктор имени файла.
     1 аргумент - days_ago - количество прошедших дней'''
-    filename = (date.today() - timedelta(days=days_ago)).strftime('20%y%m%d.BIL')
+    filename = (datetime.date.today() - datetime.timedelta(days=days_ago)).strftime('20%y%m%d.BIL')
     return filename
 
 def copy_day(fn):
@@ -66,7 +67,7 @@ else:
     print('Файлы за последнюю неделю были проверены. Внимание, не все файлы есть в архиве.')
 
 while True:
-
+    next_try = (datetime.datetime.now().ctime() + datetime.timedelta(days=1))
     if input() == 'exit':
         break
 setclr(h, 7)
