@@ -1,6 +1,6 @@
 from shutil import copy
-import datetime #import date, timedelta
-import time
+from datetime import date, timedelta, datetime
+from time import sleep
 from ctypes import *
 from os import listdir
 from os.path import isfile, join
@@ -9,16 +9,6 @@ windll.Kernel32.GetStdHandle.restype = c_ulong
 h = windll.Kernel32.GetStdHandle(c_ulong(0xfffffff5))
 setclr = windll.Kernel32.SetConsoleTextAttribute
 
-#def wfc(fn):
-#    '''Was file copied?
-#    Проверка, был ли файл ранее скопирован?
-#    1 аргумент - fn - имя файла'''
-#    with open('copied.txt', 'r') as copied:
-#        for line in copied:
-#            if fn == line.strip():
-#                return True
-#        return False
-
 def check_archive():
     return [f[29:37]+'.BIL' for f in listdir(src) if isfile(join(src, f))]
 
@@ -26,12 +16,10 @@ def fnc(days_ago):
     '''File Name Constructor.
     Коструктор имени файла.
     1 аргумент - days_ago - количество прошедших дней'''
-    filename = (datetime.date.today() - datetime.timedelta(days=days_ago)).strftime('20%y%m%d.BIL')
+    filename = (date.today() - timedelta(days=days_ago)).strftime('20%y%m%d.BIL')
     return filename
 
 def copy_day(fn):
-
-#    is_not_today =
     'копиирование файла'
     if fn in all_copied_files:
         setclr(h, 11)
@@ -53,7 +41,7 @@ def copy_day(fn):
 
 #src = '\\\\Bam\\D$\\Bill\\Bill\\'
 #dst = '\\\\10.149.105.2\\data\\in\\'
-archive = '\\\\10.149.105.2\\data\\archive\\'
+archive = 'D:\\' #'\\\\10.149.105.2\\data\\archive\\'
 src = 'D:\\'
 dst = 'D:\I\\'
 
@@ -67,10 +55,10 @@ else:
     setclr(h, 12)
     print('Файлы за последнюю неделю были проверены. Внимание, не все файлы есть в архиве.')
 
-today = datetime.datetime.today().day
+this_day = datetime.today().day
 
 while True:
-    time.sleep(7200)
-    if today != datetime.datetime.today().day or last_try is False:
+    sleep(7200)
+    if this_day != datetime.today().day or last_try is False:
         last_try = copy_day(fnc(1))
-setclr(h, 7)
+    setclr(h, 7)
