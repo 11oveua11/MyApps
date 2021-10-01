@@ -30,6 +30,8 @@ def fnc(days_ago):
     return filename
 
 def copy_day(fn):
+
+#    is_not_today =
     'копиирование файла'
     if fn in all_copied_files:
         setclr(h, 11)
@@ -56,18 +58,19 @@ src = 'D:\\'
 dst = 'D:\I\\'
 
 setclr(h, 7)
-
 all_copied_files = check_archive()
-
-if all(copy_day(fnc(i)) for i in range(8, 1, -1)): #попытка скопировать последнюю неделю
+last_try = True
+if all([copy_day(fnc(i)) for i in range(7, 0, -1)]): #попытка скопировать последнюю неделю
     setclr(h, 10)
     print('Файлы за последнюю неделю были проверены. Всё ОК')
 else:
     setclr(h, 12)
     print('Файлы за последнюю неделю были проверены. Внимание, не все файлы есть в архиве.')
 
+today = datetime.datetime.today().day
+
 while True:
-    next_try = (datetime.datetime.now().ctime() + datetime.timedelta(days=1))
-    if input() == 'exit':
-        break
+    time.sleep(7200)
+    if today != datetime.datetime.today().day or last_try is False:
+        last_try = copy_day(fnc(1))
 setclr(h, 7)
