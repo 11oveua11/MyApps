@@ -10,7 +10,7 @@ h = windll.Kernel32.GetStdHandle(c_ulong(0xfffffff5))
 setclr = windll.Kernel32.SetConsoleTextAttribute
 
 def check_archive():
-    return [f[29:37]+'.BIL' for f in listdir(src) if isfile(join(src, f))]
+    return [f[29:37]+'.BIL' for f in listdir(archive) if isfile(join(archive, f))]
 
 def fnc(days_ago):
     '''File Name Constructor.
@@ -28,7 +28,7 @@ def copy_day(fn):
     else:
         try:
             setclr(h, 14)
-            print("попытка скопировать: "+fn+", жди...\nИЗ: "+src+"\nВ: "+dst)
+            print("попытка скопировать: "+fn+"\nИЗ: "+src+"\nВ: "+dst+'\nжди...', end='\r')
             copy(src + fn, dst + fn)
             setclr(h, 10)
             print("СКОПИРОВАЛ "+fn)
@@ -38,27 +38,30 @@ def copy_day(fn):
             print('!НЕ СКОПИРОВАЛОСЬ :-(')
             return False
 
-
-#src = '\\\\Bam\\D$\\Bill\\Bill\\'
-#dst = '\\\\10.149.105.2\\data\\in\\'
-archive = 'D:\\' #'\\\\10.149.105.2\\data\\archive\\'
-src = 'D:\\'
-dst = 'D:\I\\'
+src = '\\\\Bam\\D$\\Bill\\Bill\\'
+dst = '\\\\10.149.105.2\\data\\in\\'
+archive = '\\\\10.149.105.2\\data\\archive\\'
+#src = 'D:\\'
+#dst = 'D:\I\\'
 
 setclr(h, 7)
 all_copied_files = check_archive()
 last_try = True
+
 if all([copy_day(fnc(i)) for i in range(7, 0, -1)]): #попытка скопировать последнюю неделю
     setclr(h, 10)
     print('Файлы за последнюю неделю были проверены. Всё ОК')
 else:
     setclr(h, 12)
-    print('Файлы за последнюю неделю были проверены. Внимание, не все файлы есть в архиве.')
+    print('Файлы за последнюю неделю были проверены.\nВнимание, не все файлы есть в архиве. Копировать отсутствующие не удалось.')
 
 this_day = datetime.today().day
-
 while True:
+    now_event = datetime.now().strftime('%d %h, %H:%M')
+    setclr(h, 11)
+    print('Последняя проверка была {} ждём следующий день...'.format(now_event))
     sleep(7200)
     if this_day != datetime.today().day or last_try is False:
         last_try = copy_day(fnc(1))
+    this_day = datetime.today().day
     setclr(h, 7)
