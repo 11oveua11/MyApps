@@ -63,5 +63,6 @@ while True:
     sleep(7200)
     if this_day != datetime.today().day or last_try is False:
         last_try = copy_day(fnc(1))
+    else: print('\r')
     this_day = datetime.today().day
     setclr(h, 7)
